@@ -122,10 +122,139 @@ git clone https://github.com/P-UP-MFB/pooler-wallet.git
 git clone https://github.com/P-UP-MFB/pooler-vas.git
 git clone https://github.com/P-UP-MFB/pooler-checkout.git
 git clone https://github.com/P-UP-MFB/pooler-backoffice-api.git
+ ```
+### 3.  Database and Redis Setup
 
-# Clone email templates
-# cd ../tools
-# git clone https://github.com/P-UP-MFB/email-templates.git
 
-# cd ..
-    ```
+---
+
+## Start Database and Redis
+
+To begin, spin up your **PostgreSQL** and **Redis** services using Docker Compose:
+
+```bash
+
+docker-compose up -d postgres redis
+
+````
+
+**Wait for Postgres to be Healthy:** Ensure the `postgres` service is fully operational before proceeding. You can monitor its status with:
+
+```bash
+
+docker-compose ps
+
+```
+
+Or by tailing its logs:
+
+```bash
+
+docker-compose logs postgres
+
+```
+
+-----
+
+## Initial Database Setup
+
+Connect to your PostgreSQL instance using a client like **psql**. Connection details can be found in your `docker-compose.yml` (e.g., `host: localhost`, `port: 5432`, `user: user`, `password: password`, `database: pooler_db`).
+
+### For Pooler Core API
+
+  * **Create Ledgers and Savings Accounts:** Manually set up the necessary ledgers and savings accounts on your local "PUP's CBA". For development, this might involve direct inserts into `pooler_db` or using a simulated CBA interface.
+
+  * **Run SQL Queries:**
+
+      * Execute the **SQL QUERY TO CREATE PARTNERS**.
+
+      * Execute the **SQL QUERY TO CREATE CONFIGURATIONS**. ⚠️ **Important:** Replace placeholders such as `<woodcore_collection_fee_savings_account_no>`, `<woodcore_transfer_fee_ledger_id>`, `<woodcore_balance_with_partner_ledger_id>`, `<bank_contact_email_address>`, and `<bank_contact_mobile_number>` with appropriate test values.
+
+  * **Generate `core_banking_token`:** Use the provided Node.js encryption snippet and your test CBA API key to generate this token. Update your `docker-compose.yml` for `pooler-core-api` with this generated token.
+
+  * **Run SQL Dump:** Execute the **SQL DUMP TO CREATE BANKS**.
+
+### For Pooler Session
+
+  * **Run SQL Query:** Execute the **SQL query to set your version config for the mobile app**.
+
+### For Pooler Transfer
+
+  * **Create Ledgers and Savings Accounts:** Create the following accounts on your local "PUP's CBA":
+
+      * Pooler Account Transfer Ledger
+
+      * PUP NIBSS Holding Ledger
+
+      * Woodcore Collection Fee Account
+
+      * PUP NIBSS Income Ledger
+
+      * Pooler NIBSS Settlement Ledger
+
+  * **Run SQL Query:** Execute the **SQL QUERY TO CREATE TRANSFER PARTNERS**. Carefully replace all placeholders, including `<wc_partner_ledger_id_value_in_partner_table_on_core_api>`, `<PUP_BANK_CODE>`, `<p_up_pooler_account_liability_ledger>`, and `<pup_plain_api_key>`, with your specific development values.
+
+### For Pooler VAS
+
+  * **Create Ledgers:** Create the `Pooler VAS Partner Ledger` and `Pooler VAS Income Ledger` on your local "PUP's CBA".
+
+  * **Run SQL Query:** Execute the **SQL QUERY TO RUN (for Configurations table)**.
+
+      * Generate the encrypted `partner_access` using the provided snippet, your chosen `ENCRYPTION_KEY`, and `Bearer <partner_api_key>`. Update your `docker-compose.yml` for `pooler-vas` with this generated value.
+
+### For Pooler Backoffice API
+
+  * If you've altered the schema name, ensure you update the migration files accordingly. The `postgres` service handles the initial database creation.
+
+-----
+
+# 5.3. Build and Run Services
+
+-----
+
+## Build All Images
+
+Build the Docker images for all services defined in your `docker-compose.yml`:
+
+```bash
+
+docker-compose build
+
+```
+
+-----
+
+## Start All Services
+
+Once the images are built, start all your containerized services in detached mode:
+
+```bash
+
+docker-compose up -d
+
+```
+
+-----
+
+## Verify Service Status
+
+To confirm that all services are running as expected, check their status:
+
+```bash
+
+docker-compose ps
+
+```
+
+And monitor their logs for any startup errors:
+
+```bash
+
+docker-compose logs -f
+
+```
+
+```
+
+```
+
