@@ -1,9 +1,5 @@
 # Pooler Microservices Development Environment Setup 🐳
 
-As a DevOps engineer, I'll leverage Docker and Docker Compose to containerize the Pooler microservices. This approach ensures consistency across development environments, simplifies dependency management, and streamlines deployment, **assuming no software is pre-installed on your machine beyond a basic operating system.**
-
----
-
 ### 1. Initial Setup & Prerequisites with Installation Instructions 🛠️
 
 Before diving into creating Dockerfiles, we'll need to install and configure the following:
@@ -69,12 +65,6 @@ For services interacting with AWS (like Pooler Session for SES, Pooler Core API 
 
 While we're containerizing, the document mentions Heroku for environment variables and specific post-launch tasks. Understanding its original deployment context is valuable. The Heroku CLI isn't strictly necessary for a Docker *development* setup but can be useful for inspecting existing Heroku apps or managing Heroku-specific environment variables if you have them defined elsewhere.
 
-* **Heroku Account:** Sign up at [Heroku](https://signup.heroku.com/).
-* **Heroku CLI Installation:**
-    * **macOS (Homebrew):** `brew install heroku/brew/heroku`
-    * **Windows (Standalone installer):** Download from [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli).
-    * **Linux:** Follow instructions on the [Heroku CLI](https://devcenter.heroku.com/articles/heroku-cli) page (e.g., using `snap` or `curl` for tarball).
-    * **Verification:** `heroku --version`
 
 #### 1.5. PostgreSQL Client
 
@@ -105,29 +95,37 @@ Used for interacting with Redis, which is a dependency for services using BullMQ
 
 ---
 
-### 2. General Dockerfile Structure for Node.js Services 📦
+### 2. Repository Setup
 
-Most of Pooler's server-side services are Node.js applications. We'll use a common Dockerfile structure for them, adapting it for specific service needs. This Dockerfile assumes you have the source code for each service.
+#### Clone Repositories
 
-```dockerfile
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+```bash
+# Create project directory
 
-# Set the working directory in the container
-WORKDIR /app
+mkdir pooler-development
+cd pooler-development
 
-# Copy package.json and package-lock.json first to leverage Docker cache
-# This means if dependencies don't change, these layers are cached and rebuilds are faster.
-COPY package*.json ./
+git clone https://github.com/P-UP-MFB/pooler-ui.git
+git clone https://github.com/P-UP-MFB/pooler-backoffice-ui.git
+git clone https://github.com/P-UP-MFB/pooler-simulator.git
+git clone https://github.com/P-UP-MFB/pooler-checkout-script.git
+git clone https://github.com/P-UP-MFB/pooler-checkout-middleware.git
+git clone https://github.com/P-UP-MFB/pooler-mobile.git
 
-# Install application dependencies
-RUN npm install
 
-# Copy the rest of the application code
-COPY . .
+git clone https://github.com/P-UP-MFB/pooler-session.git
+git clone https://github.com/P-UP-MFB/pooler-core-api.git
+git clone https://github.com/P-UP-MFB/pooler-reader.git
+git clone https://github.com/P-UP-MFB/pooler-transfer.git
+git clone https://github.com/P-UP-MFB/pooler-webhook.git
+git clone https://github.com/P-UP-MFB/pooler-wallet.git
+git clone https://github.com/P-UP-MFB/pooler-vas.git
+git clone https://github.com/P-UP-MFB/pooler-checkout.git
+git clone https://github.com/P-UP-MFB/pooler-backoffice-api.git
 
-# Expose the port the app runs on
-EXPOSE <SERVICE_PORT>
+# Clone email templates
+# cd ../tools
+# git clone https://github.com/P-UP-MFB/email-templates.git
 
-# Define the command to run the application
-CMD [ "npm", "start" ]
+# cd ..
+    ```
