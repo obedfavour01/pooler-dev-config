@@ -1,6 +1,6 @@
-# Pooler Microservices Development Environment Setup 🐳
+# Pooler Microservices Development Environment Setup 
 
-### 1. Initial Setup & Prerequisites with Installation Instructions 🛠️
+### 1. Initial Setup & Prerequisites with Installation Instructions 
 
 Before diving into creating Dockerfiles, we'll need to install and configure the following:
 
@@ -41,7 +41,51 @@ Git is essential for cloning the Pooler service repositories.
         git --version
         ```
 
-#### 1.3. AWS Account & AWS CLI
+#### 1.3\. Install Node.js (Official Website)**
+
+-   Go to the official Node.js website: <https://nodejs.org/en>
+
+-   Download the **LTS (Long Term Support)** installer for your operating system (Windows .msi, macOS .pkg).
+
+-   Run the downloaded installer and follow the on-screen prompts, accepting defaults.
+
+-   **Verify:** Open your terminal/command prompt and run `node -v` and `npm -v`.
+
+* * * * *
+
+**\. Install NVM (Node Version Manager) & Node.js 18.20.7**
+
+NVM allows easy switching between Node.js versions.
+
+-   **Install NVM:**
+
+    -   **macOS/Linux:** Open your terminal and run:
+
+        Bash
+
+        ```
+        curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash
+
+        ```
+
+        *(Note: Check the NVM GitHub page for the very latest install script if v0.39.7 isn't current.)*
+
+    -   **Windows:** Download the `nvm-setup.zip` from the latest `nvm-windows` releases on GitHub (<https://github.com/coreybutler/nvm-windows/releases>), unzip, and run the installer.
+
+-   **Verify NVM:** Close and reopen your terminal. Run `nvm --version` (macOS/Linux) or `nvm version` (Windows).
+
+-   **Install Node.js 18.20.7 and set it as default:**
+
+    Bash
+
+    ```
+    nvm install 18.18.0
+    nvm use 18.18.0
+    ```
+
+-   **Verify:** Run `node -v` and `npm -v` to confirm Node.js 18.20.7 is active.
+
+#### 1.4. AWS Account & AWS CLI
 
 For services interacting with AWS (like Pooler Session for SES, Pooler Core API potentially for secrets if not using local mocks), an AWS account is needed, and the AWS CLI is useful for managing resources like SES templates.
 
@@ -61,12 +105,8 @@ For services interacting with AWS (like Pooler Session for SES, Pooler Core API 
         ```
         You'll be prompted for your AWS Access Key ID, Secret Access Key, default region, and default output format.
 
-#### 1.4. Heroku Account & Heroku CLI (Optional for Dockerized Dev)
 
-While we're containerizing, the document mentions Heroku for environment variables and specific post-launch tasks. Understanding its original deployment context is valuable. The Heroku CLI isn't strictly necessary for a Docker *development* setup but can be useful for inspecting existing Heroku apps or managing Heroku-specific environment variables if you have them defined elsewhere.
-
-
-#### 1.5. PostgreSQL Client
+#### 1.6. PostgreSQL Client
 
 You'll need a client to connect to the PostgreSQL database container for initial setup (running SQL queries).
 
@@ -79,7 +119,7 @@ You'll need a client to connect to the PostgreSQL database container for initial
     * **pgAdmin 4:** Cross-platform, comprehensive GUI. Download from [pgAdmin](https://www.pgadmin.org/download/).
     * **DBeaver:** Universal database tool. Download from [DBeaver Community](https://dbeaver.io/download/).
 
-#### 1.6. Redis CLI
+#### 1.7. Redis CLI
 
 Used for interacting with Redis, which is a dependency for services using BullMQ (Pooler Transfer, Pooler Wallet, Pooler VAS, Pooler Webhook).
 
@@ -123,42 +163,121 @@ git clone https://github.com/P-UP-MFB/pooler-vas.git
 git clone https://github.com/P-UP-MFB/pooler-checkout.git
 git clone https://github.com/P-UP-MFB/pooler-backoffice-api.git
  ```
-### 3.  Database and Redis Setup
 
 
----
-
-## Start Database and Redis
-
-To begin, spin up your **PostgreSQL** and **Redis** services using Docker Compose:
+### Pooler Session
 
 ```bash
+cd pooler-development/pooler-session
 
-docker-compose up -d postgres redis
+# Install the dependencies needed for the application to run successfully.
+npm install
 
-````
+#To run migrations
+npm run migrate:up
 
-**Wait for Postgres to be Healthy:** Ensure the `postgres` service is fully operational before proceeding. You can monitor its status with:
 
-```bash
+# To start services
+npm run dev
 
-docker-compose ps
 
 ```
 
-Or by tailing its logs:
+### Pooler Reader
 
 ```bash
+cd pooler-development/pooler-reader
 
-docker-compose logs postgres
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+# To start services
+npm run dev
+
 
 ```
 
------
+### Pooler Core Api
 
-## Initial Database Setup
+```bash
+cd pooler-development/pooler-core-api
 
-Connect to your PostgreSQL instance using a client like **psql**. Connection details can be found in your `docker-compose.yml` (e.g., `host: localhost`, `port: 5432`, `user: user`, `password: password`, `database: pooler_db`).
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+#To run migrations
+npm run migrate:up
+
+
+# To start services
+npm run dev
+```
+
+### Pooler Wallet
+
+```bash
+cd pooler-development/pooler-wallet
+
+cd src
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+#To run migrations
+npm run migrate:up
+
+
+# To start services
+npm run dev
+
+# To start worker services
+npm run startWorker
+
+```
+
+
+### Pooler Transfer
+```bash
+cd pooler-development/pooler-transfer
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+#To run migrations
+npm run migrate:up
+
+
+# To start services
+npm run dev
+
+# To start worker services
+npm run startWorker
+
+```
+
+### Pooler vas
+```bash
+cd pooler-development/pooler-vas
+
+cd src
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+#To run migrations
+npm run migrate:up
+
+
+# To start services
+npm run dev
+
+# To start worker services
+npm run startWorker
+```
+
+
+
+
 
 ### For Pooler Core API
 
