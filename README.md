@@ -165,11 +165,30 @@ git clone https://github.com/P-UP-MFB/pooler-backoffice-api.git
  ```
 
 
-###DB Setup
+### DB Setup
 
-CREATE database Pooler;
+####  - Create the `pooler` Database
 
-Create Schema Pooler-session
+From the default `postgres` database or using `psql`:
+
+```bash
+
+CREATE DATABASE pooler;
+```
+
+#### - Connect to `pooler` Database
+
+```bash
+
+
+`psql -U postgres -d pooler`
+
+# Or from inside `psql`:
+
+\c pooler
+
+```
+
 
 ### Pooler Session
 
@@ -180,60 +199,12 @@ cd pooler-development/pooler-session
 npm install
 
 
-#Create Schema
+# Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_session;
 
-✅ How to Structure This in PostgreSQL
--------------------------------------
 
-### 📌 1. Create the `pooler` Database
-
-From the default `postgres` database or using `psql`:
-
-sql
-
-CopyEdit
-
-`CREATE DATABASE pooler;`
-
-* * * * *
-
-### 📌 2. Connect to `pooler` Database
-
-bash
-
-CopyEdit
-
-`psql -U postgres -d pooler`
-
-Or from inside `psql`:
-
-sql
-
-CopyEdit
-
-`\c pooler`
-
-* * * * *
-
-### 📌 3. Create Schemas for Each Microservice
-
-sql
-
-CopyEdit
-
-`CREATE SCHEMA pooler_session;
-CREATE SCHEMA pooler_core_api;
-CREATE SCHEMA pooler_reader;
-CREATE SCHEMA pooler_transfer;
-CREATE SCHEMA pooler_webhook;
-CREATE SCHEMA pooler_wallet;
-CREATE SCHEMA pooler_vas;
-CREATE SCHEMA pooler_checkout;
-CREATE SCHEMA pooler_backoffice;
--- etc.`
-
-# CReate a .env and use the .env.txt reference and populate as required
-
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
 
 #To run migrations
 npm run migrate:up
@@ -267,6 +238,13 @@ cd pooler-development/pooler-core-api
 # Install the dependencies needed for the application to run successfully.
 npm install
 
+# Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_core_api;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
+
 #To run migrations
 npm run migrate:up
 
@@ -284,6 +262,14 @@ cd src
 
 # Install the dependencies needed for the application to run successfully.
 npm install
+
+
+# Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_wallet;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
 
 #To run migrations
 npm run migrate:up
@@ -304,6 +290,13 @@ cd pooler-development/pooler-transfer
 
 # Install the dependencies needed for the application to run successfully.
 npm install
+
+# # Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_transfer;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
 
 #To run migrations
 npm run migrate:up
@@ -326,6 +319,39 @@ cd src
 # Install the dependencies needed for the application to run successfully.
 npm install
 
+# # Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_vas;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
+
+#To run migrations
+npm run migrate:up
+
+
+# To start services
+npm run dev
+
+# To start worker services
+npm run startWorker
+```
+
+### Pooler webhook
+```bash
+cd pooler-development/pooler-webhook
+
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+# # Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_webhook;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
+
 #To run migrations
 npm run migrate:up
 
@@ -339,5 +365,96 @@ npm run startWorker
 
 
 
+### Pooler Checkout
+
+```bash
+cd pooler-development/pooler-checkout
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+# To start services
+npm run dev
 
 
+```
+
+### Pooler BackOffice Api
+
+Make sure to have the following environment variables set in your `.env` file:
+
+```bash
+
+
+#### Install dependencies
+
+# Make sure you have Node.js and npm installed
+npm install
+
+
+# Create Schema(this command must be run in the postgres terminal and ensure you are in the pooler Db)
+CREATE SCHEMA pooler_backoffice_api;
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
+#### Instructions to run the project
+
+# run these following in these order
+- npm run db:migrate
+- npm run db:session
+- npm run db:core
+- npm run db:wallet
+- npm run db:transfer
+- npm run db:vas
+- npm run db:backoffice
+
+
+
+#### Start the application
+
+# Start the application in development mode
+npm run dev
+# Start the application in production mode
+npm run start
+
+````
+
+### Pooler Web UI
+
+##### Make sure to sure to use the .env.txt file as a guide to create a .env file  
+
+```bash
+
+cd pooler-development/pooler-web-ui
+
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+
+** Create a .env and use the .env.txt reference and populate as required **
+touch .env
+
+
+# To start services
+npm run dev
+
+```
+
+### Pooler Checkout Middleware
+
+##### Make sure to sure to use the .env.txt file as a guide to create a .env file  
+
+```bash
+
+cd pooler-development/pooler-checkout-middleware
+
+
+# Install the dependencies needed for the application to run successfully.
+npm install
+
+# To start services
+npm run dev
+
+```
